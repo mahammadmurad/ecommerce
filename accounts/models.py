@@ -14,11 +14,10 @@ class MyAccountManager(BaseUserManager):
             username = username,
             first_name = first_name,
             last_name = last_name,
-            password = password
+            #password = password
         )
         user.set_password(password)
         user.save(using=self._db)
-
         return user
     
     def create_superuser(self,first_name,last_name,username,email, password,):
@@ -29,7 +28,7 @@ class MyAccountManager(BaseUserManager):
             last_name = last_name,
             password=password
         )
-        #user.is_admin = True
+        user.is_admin = True
         user.is_active = True
         user.is_staff = True
         user.is_superuser = True
@@ -42,13 +41,14 @@ class Account(AbstractBaseUser,PermissionsMixin):
     last_name = models.CharField(max_length=50)
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=80, unique=True)
+    phone_number    = models.CharField(max_length=50)
 
 
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now_add=True)
     #is_admin = models.BooleanField(default=False )
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
