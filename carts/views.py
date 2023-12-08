@@ -132,7 +132,7 @@ def remove_cart(request, product_id, cart_item_id):
     product = get_object_or_404(Product, id=product_id)
     try:
         if request.user.is_authenticated:
-            cart_item = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
+            cart_item = CartItem.objects.get(product=product, user=request.user, id=cart_item_id)
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
             cart_item = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
@@ -192,6 +192,8 @@ def checkout(request):
     try:
         tax = 0
         grand_total = 0
+        total = 0 
+        quantity = 0
         if request.user.is_authenticated:
             cart_items = CartItem.objects.filter(user=request.user, is_active=True)
         else:
