@@ -14,8 +14,8 @@ class MyAccountManager(BaseUserManager):
             username = username,
             first_name = first_name,
             last_name = last_name,
-            #password = password
         )
+
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -50,7 +50,7 @@ class Account(AbstractBaseUser,PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=True)
-
+    
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
