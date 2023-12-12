@@ -14,6 +14,7 @@ from django.core.mail import EmailMessage
 
 from carts.views import _cart_id
 from carts.models import *
+from orders.models import Order
 
 import requests
 
@@ -143,15 +144,15 @@ def activate(request, uidb64, token):
 
 @login_required(login_url = 'login')
 def dashboard(request):
-    # orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
-    # orders_count = orders.count()
+    orders = Order.objects.order_by('-created_at').filter(user_id=request.user.id, is_ordered=True)
+    orders_count = orders.count()
 
     # userprofile = UserProfile.objects.get(user_id=request.user.id)
-    # context = {
-    #     'orders_count': orders_count,
-    #     'userprofile': userprofile,
-    # }
-    return render(request, 'accounts/dashboard.html') #context)
+    context = {
+        'orders_count': orders_count,
+        #'userprofile': userprofile,
+    }
+    return render(request, 'accounts/dashboard.html' ,context)
 
 
 def forgotPassword(request):
@@ -214,3 +215,12 @@ def resetPassword(request):
             return redirect('resetPassword')
     else:
         return render(request, 'accounts/resetPassword.html')
+    
+
+@login_required(login_url='login')
+def my_orders(request):
+    orders = Order.objects.filter(user=request.user, is_ordered=True).order_by('-created_at')
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'accounts/my_orders.html', context)
